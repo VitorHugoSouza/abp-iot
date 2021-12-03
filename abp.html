@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<head>
+  <title>ABP IOT II - Vitor Hugo - Vladson</title>
+  <meta charset="utf-8">
+  <meta http-equiv="refresh" content="3">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="https://unisatc.com.br/wp-content/uploads/2020/07/cropped-satc-fav-icon-32x32.png"
+    sizes="32x32">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css"
+    integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .topnav {
+      overflow: hidden;
+      background-color: #006400;
+      padding: 10px;
+    }
+
+    .content {
+      background-color: #FFFAFA;
+      padding: 10px;
+      height: 200px;
+    }
+
+    .footer {
+      background-color: #228B22;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    .footerSite {
+      background-color: #006400;
+      padding: 10px;
+      margin-top: 250px;
+    }
+
+    #logo {
+      position: absolute;
+      left: 1500px;
+      top: 60px;
+    }
+
+    .row {
+      margin: 0;
+      padding: 0;
+    }
+
+    #silo {
+      max-width: 300px;
+      max-height: 250px;
+      width: auto;
+      height: auto;
+    }
+
+    .botao {
+      width: 190px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 30px;
+      overflow: hidden;
+      max-width: 300px;
+    }
+
+    .divCard {
+      margin-left: 300px;
+      margin-right: 0;
+      padding-top: 20px;
+      max-width: 1366px;
+    }
+  </style>
+</head>
+
+<body>
+  <p class="count"></p>
+  <div class="topnav">
+    <p></p>
+  </div>
+
+  <div class="content" style="text-align:center">
+    <h2>MONITORAMENTO DO SILO DE ARROZ</h2>
+    <img src="https://www1.satc.edu.br/parcelamento_satc/assets/img/logotipo_horizontal.png" alt="some text" width=300
+      height=127 class=logo>
+  </div>
+
+  <div class="footer">
+    <p></p>
+  </div>
+
+  <div class="divCard">
+    <div class="row g-2">
+
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title"><i class="far fa-edit"></i> Controle de volume</h5>
+          <div id="VolumeInferior">
+            <p class="card-text" style="color: red;"><i class="fas fa-info-circle"></i> Volume inferior a 5 m³. Nivel crítico!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="width: 18rem; margin-left: 10px;">
+        <div class="card-body">
+          <h5 class="card-title"><i class="far fa-lightbulb"></i> Estado lâmpada</h5>
+          <div id="EstadoLampadaApagada">
+            <p class="card-text" style="color: red;"><i class="fas fa-exclamation-triangle"></i> Lampada apagada. Verifique a temperatura!</p>
+          </div>
+          <div id="EstadoLampadaAcesa">
+            <p class="card-text" style="color: green;"><i class="fas fa-check-square"></i> Lampada acesa. Temperatura controlada!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="width: 18rem; margin-left: 10px;">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-sync"></i> Volume Atual do Silo</h5>
+          <p class="card-text" id="state">Volume em %STATE%m³.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footerSite">
+    <p></p>
+  </div>
+
+  <!--
+    Escopo de funções
+  -->
+
+  <script>
+    var gateway = `ws://${window.location.hostname}/ws`;
+    var websocket;
+    window.addEventListener('load', onLoad);
+    function initWebSocket() {
+      console.log('Trying to open a WebSocket connection...');
+      websocket = new WebSocket(gateway);
+      websocket.onopen = onOpen;
+      websocket.onclose = onClose;
+      websocket.onmessage = onMessage; // <-- add this line
+    }
+    function onOpen(event) {
+      console.log('Connection opened');
+    }
+    function onClose(event) {
+      console.log('Connection closed');
+      setTimeout(initWebSocket, 2000);
+    }
+    function onMessage(event) {
+
+      console.log(event.data);
+      
+      //let jsonFormatado = JSON.parse(json);
+      //console.log(jsonFormatado);
+
+      document.getElementById('state').innerHTML = jsonFormatado.VolumeAtual;
+
+      /*if (jsonFormatado.AlertaInferior=="true") {
+        document.getElementById('VolumeInferior').style.display = "block";
+      } else {
+        document.getElementById('VolumeInferior').style.display = "none";
+      }
+
+      if (jsonFormatado.StateLampada=="apagada") {       
+         document.getElementById('EstadoLampadaApagada').style.display = "none";
+      } else {
+         document.getElementById('EstadoLampadaAcesa').style.display = "none";
+      }*/
+    }
+    function onLoad(event) {
+      initWebSocket();
+    }
+    function toggle() {
+      websocket.send('toggle');
+    }
+  </script>
+
+  <!--
+    Fim escopo de funções
+  -->
+
+</body>
+</html>
