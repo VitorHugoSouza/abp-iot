@@ -1,8 +1,8 @@
-import Layout, { Content, Footer, Header } from 'antd/lib/layout/layout';
-import Monitoramento from '../monitoramento/Monitoramento';
-import './Sidebar.css';
-import Comp from '../assets/img/logo-comp.png';
 import { Image } from 'antd';
+import Layout, { Content, Footer, Header } from 'antd/lib/layout/layout';
+import Monitoramento from 'monitoramento/Monitoramento';
+import './Sidebar.css';
+import Comp from 'assets/img/logo-comp.png';
 
 export default function Sidebar() {
 	return (
@@ -13,13 +13,14 @@ export default function Sidebar() {
 				<div className="logo">
 					<Image
 						src={Comp}
+						preview={false}
 						alt="Logos"
 						class="logo"
 					/>
 				</div>
 
 				<div>
-					<h3 style={{ color: '#FFFFFF' }}>MONITORAMENTO ONLINE</h3>
+					<h3 style={{ color: '#FFFFFF' }}>SISTEMA DE MONITORAMENTO ONLINE</h3>
 				</div>
 
 			</Header>

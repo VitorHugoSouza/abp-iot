@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Col, Row } from 'antd';
+import { Card, Col, Divider, Row } from 'antd';
 import { BulbOutlined, FormOutlined, RedoOutlined } from '@ant-design/icons';
 import Meta from 'antd/lib/card/Meta';
 import './Monitoramento.css';
 
-
 export default function Monitoramento() {
 
-	const [controle, setControle] = useState(4);
+	const [controle, setControle] = useState(5.2);
 	const [estado, setEstado] = useState(true);
-	const [volume, setVolume] = useState(2);
+	const [volume, setVolume] = useState(5);
 	const [placa, setPlaca] = useState([]);
 
 	/*useEffect(() => {
@@ -22,7 +21,7 @@ export default function Monitoramento() {
 
 			<h3>Bem vindo ao sistema de monitoramento online!</h3>
 
-			<div>
+			<div style={{ marginTop: '30px'}}>
 
 				<Row gutter={16}>
 
@@ -34,7 +33,7 @@ export default function Monitoramento() {
 								style={{ marginBottom: '10px' }}
 							/>
 
-							{controle <= 5 ? <p><b>Volume inferior a 5 m³. Nivel crítico!</b></p> : <p>Temperatura ok</p>}
+							{controle <= 5 ? <p style={{ color: 'red' }}><b>Volume inferior a 5 m³. Nivel crítico!</b></p> : <p style={{ color: 'green' }}>Volume em bom nível!</p>}
 
 						</Card>
 					</Col>
@@ -48,9 +47,9 @@ export default function Monitoramento() {
 							/>
 
 							{estado === true ? 
-								<p>Lampada apagada. Verifique a temperatura!</p> 
+								<p style={{ color: 'green' }}>Lampada acesa. Temperatura controlada!</p>							
 								:
-								<p>Lampada acesa. Temperatura controlada!</p>							
+								<p style={{ color: 'red' }}>Lampada apagada. Verifique a temperatura!</p> 
 							}
 							
 
@@ -71,6 +70,12 @@ export default function Monitoramento() {
 					</Col>
 
 				</Row>
+			</div>
+
+			<Divider />
+			
+			<div>
+				<p><b>Informações das placas conectadas</b></p>
 			</div>
 
 			<div>
