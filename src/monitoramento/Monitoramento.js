@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { db } from 'services/firebase';
+import { ref, onValue} from "firebase/database";
+
 import { Card, Col, Divider, Row } from 'antd';
 import { BulbOutlined, FormOutlined, RedoOutlined } from '@ant-design/icons';
 import Meta from 'antd/lib/card/Meta';
@@ -10,20 +13,50 @@ export default function Monitoramento() {
 	const [estado, setEstado] = useState(true);
 	const [volume, setVolume] = useState(5);
 	const [placa, setPlaca] = useState([]);
+	const [dadosPlaca1, setDadosPlaca1] = useState([]);
+	const [distancia, setDistancia] = useState(0);
 
-	/*useEffect(() => {
+	function getDistancia() {
+		const distanciaRef = ref(db, 'distancia');
+		
+		return onValue(distanciaRef, (distanciaCol) => {
+			if(distanciaCol.exists()) {
+				console.log('distancia atualizada ==>', distanciaCol.val());
+				setDistancia(distanciaCol.val());
+			}
+		});
+	}	
 
-  }, [placa]);*/
-
+	function getPlaca1() {
+		const distanciaRef = ref(db, 'placa-1');
+		
+		return onValue(distanciaRef, (placa) => {
+			if(placa.exists()) {
+				console.log('placa1 atualizada ==>', placa.val());
+				setDadosPlaca1(placa.val());
+			}
+		});
+	}	
+	
+	useEffect(() => {
+		getDistancia();	
+		getPlaca1();	
+  }, []);
 
 	return (
 		<div>
 
+			<h1>Distância atualizada: {distancia}</h1>
+
+			<h1>Placa 1: {dadosPlaca1.distancia}</h1>
+			<h1>Status: {dadosPlaca1.status}</h1>
+
 			<h3>Bem vindo ao sistema de monitoramento online!</h3>
 
-			<div style={{ marginTop: '30px'}}>
+			<div style={{ marginTop: '30px'}}>			
 
 				<Row gutter={16}>
+
 
 					<Col span={8}>
 						<Card style={{ width: 300 }} bordered={true}>
