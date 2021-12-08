@@ -2,10 +2,8 @@
 
 ### Projeto de IoT II  cujo objetivo é desenvolver uma aplicação onde o Arduino Wemos seja configurado como um cliente TCP que envia informações de luminosidade e distância para um servidor web gerenciar e informar as atividades que os sensores estão sendo utilizados.
 
-
-###  Curso: [Engenharia de Computação - UNISATC](https://web.satc.edu.br/graduacao/engenharia-da-computacao/)
 ###  Disciplina: IoT II
-###  Professor orientador: [Vagner Rodrigues](https://github.com/vagner-rodrigues)
+###  Professor: [Vagner Rodrigues](https://github.com/vagner-rodrigues)
 ###  Acadêmicos: [Vitor Hugo de Souza](https://github.com/VitorHugoSouza) e [Vladson Ramos](https://github.com/vladsonramos)
 
 ###  Requisitos:
@@ -20,9 +18,204 @@
 
 
 ## Desenvolvimento Arduino
+### Inclusão das bibliotecas usadas no desenvolvimento.
+```
+ #include <ArduinoJson.h>
+ #include <ESP8266WiFi.h>
+ #include <FirebaseESP8266.h>
+```
+### Definições de inicialização
+```
+  #define FIREBASE_HOST "https://sys-monitoramento-default-rtdb.firebaseio.com/"
+  #define FIREBASE_AUTH "CYP4j13NzmVRDjPV1rb5rkTyjrHB6M7zi1qvf3ct"
+  #define WIFI_SSID "SSID"
+  #define WIFI_PASSWORD "PASSWORD"
+  #define TRIG D3 
+  #define ECHO D4 
+  #define sensor_iluminacao A0 
+  #define PUBLISH_INTERVAL 2000 >
+ ```
+ 
+### Indicação do banco de dados.
+```
+FirebaseData monitoramento;
+```
+### Inicialização de variaveis.
+```
+const int led_R = D5;
+const int led_G = D6;
+const int led_B = D7;
+unsigned long duracao;
+float medicao_sensor, altura_atual;
+float altura_max = 100;
+float pi = 3.14;
+float raio = 1.50;
+float resultado = 0;
+int valorLuz = 0;
+String state_lampada;
+bool publishNewState = true;
 
+```
+### Função Publish().
 
+### Função para publicação no banco recendo valor verdadeiro.
 
+```
+void publish(){
+  publishNewState = true;
+}
+```
+
+### Função de configuração dos pinos
+
+### Configura os pinos como saida, entrada e escrita
+```
+void setupPins(){
+
+  pinMode(TRIG,OUTPUT);
+  pinMode(ECHO,INPUT);
+
+  pinMode(LED_BUILTIN, OUTPUT);
+
+  pinMode(led_R, OUTPUT);
+  digitalWrite(led_R, 0);
+
+  pinMode(led_G, OUTPUT);
+  digitalWrite(led_G, 0);
+
+  pinMode(led_B, OUTPUT);
+  digitalWrite(led_B, 0);
+
+}
+```
+### Função de Configuração de Conexão do Wi-fi
+
+### Verifica ssid e senha da rede, caso esteja conectado exibe mensagem "Connected"
+
+```
+void setupWifi(){
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.print("connecting");
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.println();
+  Serial.print("connected: ");
+  Serial.println(WiFi.localIP());
+}
+
+```
+### Função de configuração do FireBase.
+### Inicialização das configurações do host e autenticação.
+```
+void setupFirebase(){
+  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
+}
+```
+### Função Setup
+
+### Inicialização das funções criado no inicio do projeto
+
+```
+void setup() {
+  Serial.begin(115200);
+
+  setupPins();
+  setupWifi();    
+
+  setupFirebase();
+
+  delay(2000);
+}
+```
+
+### Função loop.
+```
+void loop() {
+
+  
+  if(publishNewState){
+    digitalWrite(TRIG, LOW);
+    delay(5);
+    digitalWrite(TRIG, HIGH);
+    delay(10);
+    digitalWrite(TRIG, LOW);
+    duracao = pulseIn(ECHO, HIGH);
+    digitalWrite(LED_BUILTIN, LOW);
+ 
+ ```
+### Calcula distância do sensor.
+ ```
+    medicao_sensor = (duracao*0.034)/2;
+    altura_atual = altura_max - medicao_sensor;
+```
+### Calcula o volume.
+```
+    resultado = (pi * raio * raio * altura_atual) / 100;
+```
+
+### Compara o volume do silo para enviar os alertas.
+```
+ if (resultado <= 9) {
+
+      Serial.println("Volume " + String(resultado) + "m³ de preenchimento do silo");
+
+    if(resultado <= 5) {
+      
+      digitalWrite(LED_BUILTIN, HIGH);
+      delay(200);                       
+      digitalWrite(LED_BUILTIN, LOW);
+      delay(200);
+
+      Serial.println("ATENÇÃO!! Nível crítico");
+      
+    } else {
+      
+      digitalWrite(LED_BUILTIN, LOW);
+    }
+    
+  } else {
+
+    Serial.println("Volume não pode ser lido");
+    
+  }
+```
+### Setando variavel na função analogRead.
+```
+valorLuz = analogRead(sensor_iluminacao); 
+```
+
+### Compara o valor da varialvel para verificar se a luz esta acessa ou apagada
+```
+    if(valorLuz>100){
+               
+      digitalWrite(led_G, LOW);      
+      digitalWrite(led_R,HIGH);
+      Serial.println("Lampada apagada"); 
+         
+    } else {
+         
+      digitalWrite(led_R, LOW);                    
+      digitalWrite(led_G,HIGH);
+      Serial.println("Lampada acesa");
+      
+    }
+  ```
+  
+  ### Encaminho os resultados para o banco de dados.
+  ```
+    if(!isnan(resultado) && !isnan(valorLuz)){
+      Firebase.setFloat(monitoramento, "placa-2/distancia", resultado);
+      Firebase.setFloat(monitoramento, "placa-2/luminosidade", valorLuz);
+    }else{
+      Serial.println("Error Publishing");
+    }
+  }
+  
+  delay(200);
+}
+```
 
 ## Desenvolvimento Web
 
