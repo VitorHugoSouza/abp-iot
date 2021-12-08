@@ -58,7 +58,7 @@ bool publishNewState = true;
 ```
 ### Função Publish().
 
-### Função para publicação no banco recendo valor verdadeiro.
+### Função para publicação no banco recebendo valor verdadeiro.
 
 ```
 void publish(){
