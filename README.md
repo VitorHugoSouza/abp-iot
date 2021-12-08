@@ -203,7 +203,7 @@ valorLuz = analogRead(sensor_iluminacao);
     }
   ```
   
-  ### Encaminho os resultados para o banco de dados.
+  ### Encaminha os dados da placa para o banco de dados.
   ```
     if(!isnan(resultado) && !isnan(valorLuz)){
       Firebase.setFloat(monitoramento, "placa-2/distancia", resultado);
