@@ -26,8 +26,7 @@
 ```
 ### Definições de inicialização
 ```
-  #define FIREBASE_HOST "https://sys-monitoramento-default-rtdb.firebaseio.com/"
-  #define FIREBASE_AUTH "CYP4j13NzmVRDjPV1rb5rkTyjrHB6M7zi1qvf3ct"
+ 
   #define WIFI_SSID "SSID"
   #define WIFI_PASSWORD "PASSWORD"
   #define TRIG D3 
