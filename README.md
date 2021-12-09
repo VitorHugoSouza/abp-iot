@@ -106,13 +106,7 @@ void setupWifi(){
 }
 
 ```
-### Função de configuração do FireBase.
-### Inicialização das configurações do host e autenticação.
-```
-void setupFirebase(){
-  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
-}
-```
+
 ### Função Setup
 
 ### Inicialização das funções criado no inicio do projeto
