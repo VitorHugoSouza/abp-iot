@@ -26,7 +26,8 @@
 ```
 ### Definições de inicialização
 ```
- 
+ #define FIREBASE_HOST "link host server"
+ #define FIREBASE_AUTH "key de autenticação"
   #define WIFI_SSID "SSID"
   #define WIFI_PASSWORD "PASSWORD"
   #define TRIG D3 
